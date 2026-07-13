@@ -5,7 +5,7 @@ function Track() {
     <>
       {marqueeItems.map((t) => (
         <span key={t}>
-          {t} <span className="marquee__star">✦</span>
+          {t} <span className="text-accent ml-11">✦</span>
         </span>
       ))}
     </>
@@ -14,8 +14,8 @@ function Track() {
 
 export default function Marquee() {
   return (
-    <div className="marquee">
-      <div className="marquee__track">
+    <div className="border-t border-b border-border py-[22px] overflow-hidden bg-bg-alt">
+      <div className="flex gap-14 w-max animate-[marquee_30s_linear_infinite] font-mono text-[15px] font-semibold text-muted-2 whitespace-nowrap">
         <Track />
         <Track />
       </div>
