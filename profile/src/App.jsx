@@ -10,7 +10,7 @@ import Contact from "./components/Contact";
 
 function App() {
   return (
-    <div style={{ background: "var(--bg)", minHeight: "100vh" }}>
+    <div className="bg-bg min-h-screen">
       <Nav />
       <Hero />
       <Marquee />
