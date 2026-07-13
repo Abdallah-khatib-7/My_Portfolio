@@ -1,29 +1,41 @@
 import Reveal from "./Reveal";
 
-export default function ProjectCard({ p, expanded, onToggle }) {
+export default function ProjectCard({ p, expanded, onToggle, onHoverStart, onHoverEnd }) {
   const stop = (e) => e.stopPropagation();
 
   return (
-    <Reveal delay={(p.num % 2) * 0.12}>
-      <div className="project-card" onClick={onToggle}>
-        <div className="project-card__top">
-          <div className="project-card__num">{p.num}</div>
-          <span className="project-card__badge">● {p.badge}</span>
-        </div>
-        <div className="project-card__name">{p.name}</div>
-        <div className="project-card__tagline">{p.tagline}</div>
-        <div className="project-card__tags">
-          {p.stackPreview.map((s) => (
-            <span key={s} className="tag">
-              {s}
+    <Reveal delay={Number(p.num) % 2 === 0 ? 0.08 : 0}>
+      <div
+        className="work__row"
+        onClick={onToggle}
+        onMouseEnter={onHoverStart}
+        onMouseLeave={onHoverEnd}
+      >
+        <div className="work__row-top">
+          <div className="work__row-main">
+            <span className="work__row-num">{p.num}</span>
+            <span className="work__row-name">
+              {p.name}
+              <span className="work__row-underline" />
             </span>
-          ))}
-          <span className="project-card__more">{p.moreCount}</span>
+          </div>
+          <div className="work__row-side">
+            <span className="project-card__badge">● {p.badge}</span>
+            <span
+              className="work__row-plus"
+              style={{ transform: expanded ? "rotate(45deg)" : "none" }}
+            >
+              +
+            </span>
+          </div>
         </div>
+
+        <div className="work__row-tagline">{p.tagline}</div>
+
         <div
           className="project-card__detail"
           style={{
-            maxHeight: expanded ? "800px" : "0px",
+            maxHeight: expanded ? "1000px" : "0px",
             opacity: expanded ? 1 : 0,
           }}
         >
@@ -45,15 +57,6 @@ export default function ProjectCard({ p, expanded, onToggle }) {
               </a>
             </div>
           </div>
-        </div>
-        <div className="project-card__expand">
-          <span
-            className="project-card__plus"
-            style={{ transform: expanded ? "rotate(45deg)" : "none" }}
-          >
-            +
-          </span>
-          <span>{expanded ? "close" : "expand"}</span>
         </div>
       </div>
     </Reveal>
