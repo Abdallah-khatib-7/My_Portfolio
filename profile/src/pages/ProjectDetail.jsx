@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Reveal from "../components/Reveal";
 import PreviewImage from "../components/PreviewImage";
@@ -87,14 +87,17 @@ function HeroPreview({ project }) {
   );
 }
 
-function NotFound() {
+export function NotFound({
+  title = "Page not found",
+  message = "That page doesn't exist — check the URL, or head back to the portfolio.",
+}) {
   return (
     <div className="bg-bg min-h-screen flex flex-col items-center justify-center gap-6 px-12 mobile:px-6">
       <div className="font-display text-[44px] font-extrabold tracking-[-1.5px] text-center">
-        Project not found<span className="text-accent">.</span>
+        {title}<span className="text-accent">.</span>
       </div>
       <p className="text-muted font-sans text-[16px] text-center max-w-[520px]">
-        That project doesn&apos;t exist — it may have been renamed or removed.
+        {message}
       </p>
       <Link to="/" className={BACK_LINK}>
         ← Back to portfolio
@@ -106,7 +109,6 @@ function NotFound() {
 export default function ProjectDetail() {
   const { slug } = useParams();
   const project = projectBySlug(slug);
-  const navRef = useRef(null);
 
   const sectionIds = useMemo(() => SECTIONS.map((s) => s.id), []);
   const active = useActiveSection(sectionIds);
@@ -115,14 +117,24 @@ export default function ProjectDetail() {
     window.scrollTo(0, 0);
   }, [slug]);
 
-  if (!project) return <NotFound />;
+  if (!project)
+    return (
+      <NotFound
+        title="Project not found"
+        message="That project doesn't exist — it may have been renamed or removed."
+      />
+    );
 
   const d = project.details;
   const heroTagline = d.tagline || project.tagline;
 
   return (
-    <div className="bg-bg min-h-screen relative overflow-hidden">
-      <div className="absolute w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle,rgba(239,127,63,0.10),transparent_70%)] top-[-180px] right-[-160px] animate-[drift_11s_ease-in-out_infinite] pointer-events-none" />
+    <div className="bg-bg min-h-screen relative">
+      {/* overflow-hidden lives on this wrapper, not the page root — clipping the
+          root would break position:sticky on the section nav below. */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute w-[600px] h-[600px] rounded-full bg-[radial-gradient(circle,rgba(239,127,63,0.10),transparent_70%)] top-[-180px] right-[-160px] animate-[drift_11s_ease-in-out_infinite]" />
+      </div>
 
       <div className="relative max-w-[1000px] mx-auto pt-[60px] px-12 pb-[120px] mobile:px-6 mobile:pt-10 mobile:pb-20">
         <Link to="/" className={BACK_LINK}>
@@ -152,7 +164,7 @@ export default function ProjectDetail() {
               <a
                 href={project.liveUrl}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="bg-accent text-bg font-sans text-[14px] font-semibold py-[11px] px-5 rounded-full inline-block transition-transform duration-200 hover:-translate-y-[3px] hover:text-bg"
               >
                 Visit live ↗
@@ -161,7 +173,7 @@ export default function ProjectDetail() {
             <a
               href={project.repoUrl}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className="border border-border-2 text-fg font-sans text-[14px] font-semibold py-[11px] px-5 rounded-full inline-flex items-center gap-[10px] transition-[border-color,transform] duration-200 hover:border-accent hover:-translate-y-[3px] hover:text-fg"
             >
               GitHub →
@@ -194,7 +206,6 @@ export default function ProjectDetail() {
 
         {/* ─────────────── sticky section nav ─────────────── */}
         <nav
-          ref={navRef}
           className="sticky top-0 z-40 mt-16 -mx-12 px-12 py-4 bg-[rgba(14,12,10,0.85)] backdrop-blur-[14px] border-b border-border mobile:-mx-6 mobile:px-6"
         >
           <div className="flex gap-6 flex-wrap mobile:gap-4">

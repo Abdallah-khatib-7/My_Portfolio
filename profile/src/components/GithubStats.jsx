@@ -21,10 +21,15 @@ const CARD = "border border-border rounded-2xl overflow-hidden bg-[#0a0a0a] p-2"
  * branch by a scheduled GitHub Action, so busting the cache re-fetches it but
  * cannot make it newer than the Action's last run.
  */
+// width/height are each SVG's intrinsic dimensions — the rendered size is still
+// controlled by CSS, but the attributes give the browser the aspect ratio up
+// front so the cards reserve their space instead of shifting layout on load.
 const IMAGES = (nonce) => [
   {
     key: "stats",
     alt: "GitHub stats",
+    width: 467,
+    height: 195,
     src:
       `https://github-readme-stats-one-iota-93.vercel.app/api?username=${USER}` +
       `&show_icons=true&theme=tokyonight&hide_border=true&bg_color=0a0a0a` +
@@ -34,6 +39,8 @@ const IMAGES = (nonce) => [
   {
     key: "streak",
     alt: "GitHub streak",
+    width: 495,
+    height: 195,
     src:
       `https://github-readme-streak-stats.herokuapp.com/?user=${USER}` +
       `&theme=tokyonight&hide_border=true&background=0a0a0a&ring=ef7f3f` +
@@ -42,6 +49,8 @@ const IMAGES = (nonce) => [
   {
     key: "snake",
     alt: "Contribution snake",
+    width: 880,
+    height: 192,
     src:
       `https://raw.githubusercontent.com/${USER}/${USER}/output/` +
       `github-contribution-grid-snake.svg?t=${nonce}`,
@@ -49,6 +58,8 @@ const IMAGES = (nonce) => [
   {
     key: "activity",
     alt: "GitHub activity graph",
+    width: 1200,
+    height: 420,
     src:
       `https://github-readme-activity-graph.vercel.app/graph?username=${USER}` +
       `&bg_color=0a0a0a&color=a89a8a&line=ef7f3f&point=f5efe8&area=true` +
@@ -92,6 +103,9 @@ export default function GithubStats() {
   const imgProps = (key) => ({
     src: byKey[key].src,
     alt: byKey[key].alt,
+    width: byKey[key].width,
+    height: byKey[key].height,
+    loading: "lazy",
     onLoad: onSettle,
     onError: onSettle,
   });
@@ -109,7 +123,7 @@ export default function GithubStats() {
         <a
           href={`https://github.com/${USER}`}
           target="_blank"
-          rel="noreferrer"
+          rel="noopener noreferrer"
           className="text-muted font-mono text-[14px] font-medium ml-auto transition-colors duration-200 hover:text-accent"
         >
           @{USER} ↗

@@ -1,9 +1,8 @@
 import { motion } from "framer-motion";
 
-export default function Reveal({ as = "div", delay = 0, className, style, children, ...rest }) {
-  const Component = motion[as] ?? motion.div;
+export default function Reveal({ delay = 0, className, style, children, ...rest }) {
   return (
-    <Component
+    <motion.div
       className={className}
       style={style}
       initial={{ opacity: 0, y: 30 }}
@@ -13,6 +12,6 @@ export default function Reveal({ as = "div", delay = 0, className, style, childr
       {...rest}
     >
       {children}
-    </Component>
+    </motion.div>
   );
 }

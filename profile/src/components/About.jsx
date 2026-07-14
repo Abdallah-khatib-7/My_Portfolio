@@ -4,7 +4,7 @@ import Reveal from "./Reveal";
 
 const STATS = [
   { value: 6, suffix: "", label: "systems built end-to-end" },
-  { value: 6, suffix: "", label: "live in production" },
+  { value: 5, suffix: "", label: "live in production" },
   { value: 5, suffix: "+", label: "years managing a pharmacy" },
 ];
 

@@ -4,10 +4,7 @@ import { WA_HREF } from "./Hero";
 const BTN_OUTLINE =
   "border border-border-2 text-fg font-sans text-[16px] font-semibold py-4 px-8 rounded-full inline-flex items-center gap-0 transition-[border-color,transform] duration-200 hover:border-accent hover:-translate-y-[3px] hover:text-fg";
 
-// Gmail's compose URL rather than a mailto: — mailto: hands off to the OS, which
-// shows an app-picker dialog (or nothing at all) when no default mail client is set.
-export const MAIL_HREF =
-  "https://mail.google.com/mail/?view=cm&fs=1&to=abdallah.khatib2003@gmail.com&su=Portfolio%20Inquiry";
+const MAIL_HREF = "mailto:abdallah.khatib2003@gmail.com";
 
 export default function Contact() {
   return (
@@ -26,18 +23,18 @@ export default function Contact() {
           <a
             href={WA_HREF}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="bg-whatsapp text-bg font-sans text-[16px] font-semibold py-4 px-8 rounded-full inline-flex items-center gap-[10px] transition-transform duration-200 hover:-translate-y-[3px] hover:text-bg"
           >
             WhatsApp — reply fast →
           </a>
-          <a href={MAIL_HREF} target="_blank" rel="noopener noreferrer" className={BTN_OUTLINE}>
+          <a href={MAIL_HREF} className={BTN_OUTLINE}>
             Email me
           </a>
           <a
             href="https://www.linkedin.com/in/abdallah-khatib-8b0499349"
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className={BTN_OUTLINE}
           >
             LinkedIn ↗

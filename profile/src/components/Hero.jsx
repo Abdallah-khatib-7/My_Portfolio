@@ -46,7 +46,7 @@ export default function Hero() {
           <a
             href={WA_HREF}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
             className="border border-border-2 text-fg font-sans text-[15px] font-semibold py-[15px] px-7 rounded-full inline-flex items-center gap-[10px] transition-[border-color,transform] duration-200 hover:border-whatsapp hover:-translate-y-[3px] hover:text-fg"
           >
             <span className="w-[9px] h-[9px] rounded-full bg-whatsapp inline-block" />

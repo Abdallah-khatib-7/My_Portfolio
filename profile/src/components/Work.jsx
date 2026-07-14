@@ -1,15 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import Reveal from "./Reveal";
 import ProjectCard from "./ProjectCard";
 import PreviewImage from "./PreviewImage";
 import { projects } from "../data";
 
-function lerp(start, end, factor) {
-  return start + (end - start) * factor;
-}
-
 const PREVIEW_W = 300;
 const PREVIEW_H = 150;
+
+// Tuned to feel like the old per-frame lerp(…, 0.15) follow.
+const FOLLOW_SPRING = { stiffness: 260, damping: 34, mass: 0.9 };
 
 export default function Work() {
   const [expanded, setExpanded] = useState(-1);
@@ -18,30 +18,28 @@ export default function Work() {
   // Set while the cursor is over a row's action buttons, so the floating preview
   // never sits on top of them and swallow their clicks.
   const [overActions, setOverActions] = useState(false);
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
-  const [smooth, setSmooth] = useState({ x: 0, y: 0 });
-  const rafRef = useRef(null);
 
-  useEffect(() => {
-    function animate() {
-      setSmooth((prev) => ({
-        x: lerp(prev.x, mouse.x, 0.15),
-        y: lerp(prev.y, mouse.y, 0.15),
-      }));
-      rafRef.current = requestAnimationFrame(animate);
-    }
-    rafRef.current = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(rafRef.current);
-  }, [mouse]);
+  // The hover-follow smoothing lives in motion values, not React state: updates
+  // are written straight to the preview's transform without re-rendering the
+  // section, and the springs' internal animation stops as soon as they settle —
+  // there is no always-on requestAnimationFrame loop.
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const springX = useSpring(mouseX, FOLLOW_SPRING);
+  const springY = useSpring(mouseY, FOLLOW_SPRING);
+  const previewX = useTransform(springX, (x) => {
+    const max = Math.max(window.innerWidth - PREVIEW_W - 24, 24);
+    return Math.min(Math.max(x + 24, 24), max);
+  });
+  const previewY = useTransform(springY, (y) => {
+    const max = Math.max(window.innerHeight - PREVIEW_H - 24, 24);
+    return Math.min(Math.max(y - 90, 24), max);
+  });
 
   function handleMouseMove(e) {
-    setMouse({ x: e.clientX, y: e.clientY });
+    mouseX.set(e.clientX);
+    mouseY.set(e.clientY);
   }
-
-  const maxX = typeof window !== "undefined" ? window.innerWidth - PREVIEW_W - 24 : 0;
-  const maxY = typeof window !== "undefined" ? window.innerHeight - PREVIEW_H - 24 : 0;
-  const clampedX = Math.min(Math.max(smooth.x + 24, 24), Math.max(maxX, 24));
-  const clampedY = Math.min(Math.max(smooth.y - 90, 24), Math.max(maxY, 24));
 
   return (
     <div
@@ -59,10 +57,11 @@ export default function Work() {
         </div>
       </Reveal>
 
-      <div
+      <motion.div
         className="fixed top-0 left-0 z-50 pointer-events-none mobile:hidden"
         style={{
-          transform: `translate3d(${clampedX}px, ${clampedY}px, 0)`,
+          x: previewX,
+          y: previewY,
           opacity: isVisible && !overActions ? 1 : 0,
         }}
       >
@@ -91,7 +90,7 @@ export default function Work() {
             </div>
           ))}
         </div>
-      </div>
+      </motion.div>
 
       <div className="mt-11">
         {projects.map((p, i) => (

@@ -914,24 +914,21 @@ function previewSourcesFor(p) {
 
 // The grouped techStack in `details` is the single source of truth; the flat
 // `stack` used by the homepage tags is derived from it, so the two can't drift.
+// De-duplicated: an item can appear in more than one group (e.g. TypeScript in
+// both Backend and Frontend), but must render — and key — only once.
 function flattenStack(techStack) {
-  return techStack.flatMap((group) => group.items);
+  return [...new Set(techStack.flatMap((group) => group.items))];
 }
 
-export const projects = rawProjects.map((p, i) => {
-  const stack = flattenStack(p.details.techStack);
-  return {
-    ...p,
-    slug: slugify(p.name),
-    num: String(i + 1).padStart(2, "0"),
-    badge: p.status === "LIVE" ? "LIVE" : p.status.toUpperCase(),
-    ctaLabel: "Visit live",
-    stack,
-    stackPreview: stack.slice(0, 4),
-    moreCount: "+" + (stack.length - 4) + " more",
-    previewSources: previewSourcesFor(p),
-  };
-});
+export const projects = rawProjects.map((p, i) => ({
+  ...p,
+  slug: slugify(p.name),
+  num: String(i + 1).padStart(2, "0"),
+  badge: p.status === "LIVE" ? "LIVE" : p.status.toUpperCase(),
+  ctaLabel: "Visit live",
+  stack: flattenStack(p.details.techStack),
+  previewSources: previewSourcesFor(p),
+}));
 
 const duplicateSlugs = projects
   .map((p) => p.slug)

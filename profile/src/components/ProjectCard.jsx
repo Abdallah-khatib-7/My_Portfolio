@@ -53,12 +53,21 @@ export default function ProjectCard({
             >
               See full details →
             </Link>
-            <span
-              className="inline-block text-accent font-display text-[22px] font-bold transition-transform duration-[350ms]"
+            <button
+              type="button"
+              aria-expanded={expanded}
+              aria-controls={`project-panel-${p.slug}`}
+              aria-label={`${expanded ? "Collapse" : "Expand"} ${p.name} details`}
+              onClick={(e) => {
+                // The whole row also toggles on click — don't fire both.
+                e.stopPropagation();
+                onToggle();
+              }}
+              className="inline-block cursor-pointer bg-transparent border-0 p-0 text-accent font-display text-[22px] font-bold leading-none transition-transform duration-[350ms] rounded-sm focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-4"
               style={{ transform: expanded ? "rotate(45deg)" : "none" }}
             >
               +
-            </span>
+            </button>
           </div>
         </div>
 
@@ -67,6 +76,7 @@ export default function ProjectCard({
         </div>
 
         <div
+          id={`project-panel-${p.slug}`}
           className="overflow-hidden [transition:max-height_0.55s_cubic-bezier(0.2,0.7,0.2,1),opacity_0.4s]"
           style={{
             maxHeight: expanded ? "1000px" : "0px",
@@ -92,7 +102,7 @@ export default function ProjectCard({
                 <a
                   href={p.liveUrl}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener noreferrer"
                   onClick={stop}
                   className="bg-accent text-bg font-sans text-[14px] font-semibold py-[11px] px-5 rounded-full inline-block transition-transform duration-200 hover:-translate-y-[3px] hover:text-bg"
                 >
@@ -102,7 +112,7 @@ export default function ProjectCard({
               <a
                 href={p.repoUrl}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 onClick={stop}
                 className="border border-border-2 text-fg font-sans text-[14px] font-semibold py-[11px] px-5 rounded-full inline-flex items-center gap-[10px] transition-[border-color,transform] duration-200 hover:border-accent hover:-translate-y-[3px] hover:text-fg"
               >

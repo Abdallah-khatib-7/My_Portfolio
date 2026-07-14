@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
-import ProjectDetail from './pages/ProjectDetail.jsx'
+import ProjectDetail, { NotFound } from './pages/ProjectDetail.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -11,6 +11,7 @@ createRoot(document.getElementById('root')).render(
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/work/:slug" element={<ProjectDetail />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>,
