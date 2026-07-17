@@ -17,10 +17,12 @@ const CARD = "border border-border rounded-2xl overflow-hidden bg-[#0a0a0a] p-2"
  * GitHub API rather than replay a cached SVG. So this buys genuinely fresh data,
  * not just a re-download.
  *
- * The one exception is the snake: it's a static SVG committed to the `output`
- * branch by a scheduled GitHub Action, so busting the cache re-fetches it but
- * cannot make it newer than the Action's last run.
+ * The streak card is a static SVG committed daily to the profile repo by a
+ * scheduled GitHub Action (the public streak-stats.herokuapp.com host is dead),
+ * so busting its cache re-fetches it but cannot make it newer than the Action's
+ * last run. Same story for the snake.
  */
+
 // width/height are each SVG's intrinsic dimensions — the rendered size is still
 // controlled by CSS, but the attributes give the browser the aspect ratio up
 // front so the cards reserve their space instead of shifting layout on load.
@@ -42,9 +44,8 @@ const IMAGES = (nonce) => [
     width: 495,
     height: 195,
     src:
-      `https://github-readme-streak-stats.herokuapp.com/?user=${USER}` +
-      `&theme=tokyonight&hide_border=true&background=0a0a0a&ring=ef7f3f` +
-      `&fire=ef7f3f&currStreakLabel=f5efe8&t=${nonce}`,
+      `https://raw.githubusercontent.com/${USER}/${USER}/main/profile/streak-portfolio.svg` +
+      `?t=${nonce}`,
   },
   {
     key: "snake",
